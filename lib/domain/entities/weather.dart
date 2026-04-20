@@ -9,6 +9,8 @@ class Weather {
   final double minTemp;
   final String locationName;
   final DateTime time;
+  final List<HourlyWeather> hourlyForecast;
+  final List<DailyWeather> dailyForecast;
 
   Weather({
     required this.temperature,
@@ -21,11 +23,14 @@ class Weather {
     required this.minTemp,
     required this.locationName,
     required this.time,
+    required this.hourlyForecast,
+    required this.dailyForecast,
   });
 
-  // 날씨 코드를 읽기 쉬운 설명으로 변환하는 헬퍼 메서드
-  String get weatherDescription {
-    switch (weatherCode) {
+  String get weatherDescription => getWeatherDescription(weatherCode);
+
+  static String getWeatherDescription(int code) {
+    switch (code) {
       case 0: return '맑음';
       case 1: case 2: case 3: return '대체로 맑음';
       case 45: case 48: return '안개';
@@ -36,4 +41,30 @@ class Weather {
       default: return '알 수 없음';
     }
   }
+}
+
+class HourlyWeather {
+  final DateTime time;
+  final double temperature;
+  final int weatherCode;
+
+  HourlyWeather({
+    required this.time,
+    required this.temperature,
+    required this.weatherCode,
+  });
+}
+
+class DailyWeather {
+  final DateTime time;
+  final double maxTemp;
+  final double minTemp;
+  final int weatherCode;
+
+  DailyWeather({
+    required this.time,
+    required this.maxTemp,
+    required this.minTemp,
+    required this.weatherCode,
+  });
 }

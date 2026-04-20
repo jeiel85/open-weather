@@ -13,7 +13,7 @@ class WeatherApiSource {
   // 위도, 경도를 기반으로 날씨 정보를 가져옴
   Future<WeatherModel> fetchWeather(double lat, double lon, String locationName) async {
     final url = Uri.parse(
-      '$_baseUrl?latitude=$lat&longitude=$lon&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto'
+      '$_baseUrl?latitude=$lat&longitude=$lon&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto'
     );
 
     final response = await _client.get(url);

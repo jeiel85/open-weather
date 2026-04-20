@@ -18,14 +18,17 @@ class SearchScreen extends ConsumerWidget {
         title: TextField(
           autofocus: true,
           style: const TextStyle(color: Colors.white, fontSize: 18),
+          textInputAction: TextInputAction.search, // 검색 아이콘 표시
           decoration: const InputDecoration(
             hintText: '도시 이름 검색 (예: 서울, 도쿄...)',
             hintStyle: TextStyle(color: Colors.white54),
             border: InputBorder.none,
           ),
-          onChanged: (value) {
-            // 입력값이 변경될 때마다 검색 실행
-            ref.read(searchResultsProvider.notifier).search(value);
+          onSubmitted: (value) {
+            // 엔터나 검색 버튼을 눌렀을 때만 검색 실행
+            if (value.trim().isNotEmpty) {
+              ref.read(searchResultsProvider.notifier).search(value.trim());
+            }
           },
         ),
       ),

@@ -10,23 +10,17 @@
 - `HISTORY.md`를 통한 이력 관리 체계 구축.
 
 ### 현재 상태
-- Flutter 기본 템플릿 프로젝트가 생성됨.
-- 로컬 `D:\flutter` 경로의 SDK를 연동함.
-- `http`, `geolocator`, `flutter_riverpod`, `isar`, `flutter_local_notifications` 등 주요 패키지 설치 완료.
-- 클린 아키텍처 기반 폴더 구조 설계 및 데이터 레이어 구현 완료.
-- 프리젠테이션 레이어(UI) 및 상태 관리(Riverpod) 기본 구현 완료.
-- 상태바 알림 기능 구현 및 날씨 데이터 연동 완료.
-- 위치 검색 기능(`SearchScreen`) 추가 및 전반적인 UI 디자인 개선 완료.
-- 시간별/일별 상세 예보 기능 및 동적 배경색 정교화 완료.
-- F-Droid 메타데이터 작성 및 빌드 환경 설정 최적화 완료.
+- Flutter 프로젝트 초기화 및 Clean Architecture 구조 수립 완료.
+- `shared_preferences`를 이용한 안정적인 로컬 저장소 체계 구축.
+- 안드로이드 빌드 환경 최적화 (SDK 36 강제 적용 및 Desugaring 활성화).
+- 실기기(SM-S921N) 설치 및 GitHub 저장소 동기화 완료.
+- 앱 실행 시 `LocaleDataException` 발생 확인 (다음 세션 수정 예정).
 
-## [2026-04-20] 예보 기능 추가 및 배포 준비 (최종 마무리)
+## [2026-04-20] 빌드 안정화 및 실기기 배포
 
 ### 작업 내용
-- `HourlyWeather`, `DailyWeather` 엔티티 및 모델링 확장.
-- Open-Meteo API 호출 범위 확대 (향후 24시간 및 주간 예보 데이터 포함).
-- `HomeScreen` 고도화 (시간별/일별 예보 리스트 추가, 스크롤 뷰 구성).
-- 안드로이드 빌드 오류(네임스페이스 미지정) 해결을 위한 `build.gradle.kts` 수정.
-- `fastlane/metadata` 구성을 통한 F-Droid/Play 스토어 배포 준비.
-- 프로젝트 빌드 가이드 및 기술 스택을 명시한 `README.md` 최종 업데이트.
-- MIT 라이선스 적용 및 소스 코드 최종 정리.
+- 빌드 충돌을 일으키는 `Isar`를 `shared_preferences`로 대체하여 빌드 안정성 확보.
+- Android 14+ 및 최신 플러그인 호환을 위한 `compileSdk 36` 설정 적용.
+- GitHub 원격 저장소(`jeiel85/open-weather`) 연동 및 코드 푸시.
+- 릴리스 모드 APK 빌드 및 실제 안드로이드 기기 설치 완료.
+- 런타임 오류(로케일 데이터 미초기화) 진단 및 다음 작업 계획 수립.

@@ -18,9 +18,9 @@ subprojects {
 subprojects {
     project.evaluationDependsOn(":app")
 
-    afterEvaluate {
-        if (project.hasProperty("android")) {
-            val android = project.property("android") as com.android.build.gradle.BaseExtension
+    project.plugins.whenPluginAdded {
+        if (this is com.android.build.gradle.BasePlugin) {
+            val android = project.extensions.getByName("android") as com.android.build.gradle.BaseExtension
             if (android.namespace == null) {
                 android.namespace = "com.example.${project.name.replace("-", "_")}"
             }

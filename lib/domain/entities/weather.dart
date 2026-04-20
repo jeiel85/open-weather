@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import '../../core/utils/weather_helper.dart';
+
 class Weather {
   final double temperature;
   final int weatherCode;
@@ -27,6 +30,9 @@ class Weather {
     required this.dailyForecast,
   });
 
+  String get weatherDescription => WeatherHelper.getDescription(weatherCode);
+  IconData get weatherIcon => WeatherHelper.getIcon(weatherCode, isDay: isDay);
+
   Map<String, dynamic> toMap() {
     return {
       'temperature': temperature,
@@ -50,7 +56,7 @@ class Weather {
       weatherCode: map['weatherCode']?.toInt() ?? 0,
       humidity: map['humidity']?.toDouble() ?? 0.0,
       windSpeed: map['windSpeed']?.toDouble() ?? 0.0,
-      apparentTemperature: map['apparent_temperature']?.toDouble() ?? 0.0,
+      apparentTemperature: map['apparentTemperature']?.toDouble() ?? 0.0,
       isDay: map['isDay'] ?? true,
       maxTemp: map['maxTemp']?.toDouble() ?? 0.0,
       minTemp: map['minTemp']?.toDouble() ?? 0.0,

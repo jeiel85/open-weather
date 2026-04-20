@@ -172,11 +172,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildCurrentWeather(Weather weather) {
     return Column(
       children: [
-        Icon(
-          WeatherHelper.getIcon(weather.weatherCode, isDay: weather.isDay), 
-          size: 80, 
-          color: Colors.white
-        ),
+        Icon(weather.weatherIcon, size: 80, color: Colors.white),
         const SizedBox(height: 10),
         Text(
           '${weather.temperature.round()}°',
@@ -187,7 +183,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         Text(
-          WeatherHelper.getDescription(weather.weatherCode),
+          weather.weatherDescription,
           style: const TextStyle(
             fontSize: 24, 
             color: Colors.white,

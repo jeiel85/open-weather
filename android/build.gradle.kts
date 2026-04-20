@@ -27,20 +27,15 @@ subprojects {
         }
     }
 
-    // AndroidManifest.xml에서 package 속성 제거 (AGP 8.0+ 대응)
-    afterEvaluate {
-        val removePackageAttribute = tasks.register("removePackageAttribute") {
-            val manifestFile = file("src/main/AndroidManifest.xml")
-            if (manifestFile.exists()) {
-                doLast {
-                    val content = manifestFile.readText()
-                    val updatedContent = content.replace(Regex("package=\"[^\"]*\""), "")
-                    manifestFile.writeText(updatedContent)
-                }
+    // preBuild 태스크 시점에 Manifest 파일 수정 (afterEvaluate 없이 구현)
+    tasks.withType<com.android.build.gradle.tasks.GenerateResValues>().configureEach {
+        val manifestFile = file("src/main/AndroidManifest.xml")
+        if (manifestFile.exists()) {
+            val content = manifestFile.readText()
+            if (content.contains("package=")) {
+                val updatedContent = content.replace(Regex("package=\"[^\"]*\""), "")
+                manifestFile.writeText(updatedContent)
             }
-        }
-        tasks.named("preBuild") {
-            dependsOn(removePackageAttribute)
         }
     }
 }

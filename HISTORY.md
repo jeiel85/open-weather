@@ -40,6 +40,22 @@
     - `WeatherRepository`에 `saveLastLocation`, `getLastLocation` 메서드 추가.
     - `SharedPreferences`를 이용해 마지막으로 날씨를 조회한 위도, 경도, 도시명을 로컬에 저장.
     - 앱 재실행 시 현재 위치 정보 획득 전, 마지막으로 본 위치의 날씨를 먼저 동기화하도록 `HomeScreen` 로직 개선.
+
+## [2026-04-21] 앱 실행 불가(Crash) 문제 긴급 해결 및 빌드 최적화 (v1.0.3)
+
+### 작업 내용
+- **Android 패키지 구조 동기화:**
+    - `build.gradle.kts`와 `MainActivity.kt`의 패키지명 불일치(`com.example.open_weather` vs `com.jeiel.zephyr_sky`)로 인한 런타임 크래시 해결.
+    - `MainActivity.kt`를 올바른 경로(`android/app/src/main/kotlin/com/jeiel/zephyr_sky/`)로 이동 및 패키지 선언 수정.
+- **Android 권한 보완:**
+    - `AndroidManifest.xml`에 `POST_NOTIFICATIONS`, `WAKE_LOCK`, `RECEIVE_BOOT_COMPLETED` 권한 추가하여 알림 및 백그라운드 작업 안정화.
+- **R8(난독화) 설정 추가:**
+    - `proguard-rules.pro` 파일을 생성하여 릴리스 빌드 시 Flutter 프레임워크 및 플러그인 클래스가 삭제되지 않도록 보존 설정 적용.
+
+### 현재 상태
+- 앱 실행 즉시 크래시가 발생하는 패키지명 오류가 완전히 해결됨.
+- 릴리스 모드 빌드 시 발생할 수 있는 클래스 누락 방지 설정 완료.
+- **사용자 가이드:** 수정된 소스로 새 APK를 빌드하여 재실행 권장.
 ## [2026-04-21] 앱 실행 안정성 강화 및 오류 수정 (v1.0.2)
 
 ### 작업 내용

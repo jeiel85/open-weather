@@ -47,12 +47,16 @@ jobs:
       - name: Build AAB (App Bundle)
         run: flutter build appbundle --release --build-number=${{ github.run_number }}
 
+      - name: Check Build Artifacts
+        run: |
+          ls -R build/app/outputs/
+
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
-            build/app/outputs/flutter-apk/app-release.apk
-            build/app/outputs/bundle/release/app-release.aab
+            build/app/outputs/flutter-apk/*.apk
+            build/app/outputs/bundle/release/*.aab
           generate_release_notes: true
           draft: false
           prerelease: false

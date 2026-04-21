@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.open_weather"
+    namespace = "com.jeiel.open_weather"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.open_weather"
+        applicationId = "com.jeiel.open_weather"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -33,6 +33,14 @@ android {
 
     buildTypes {
         release {
+            // 난독화 및 리소스 최적화 활성화
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")

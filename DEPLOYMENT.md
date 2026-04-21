@@ -37,10 +37,11 @@ GitHub 저장소의 **Settings > Secrets and variables > Actions**에 다음 항
 
 ---
 
-## 3. 현재 배포 상태 (v1.0.0)
+## 3. 현재 배포 상태 (v1.0.5)
 
 - **GitHub Release:** 완료 ([릴리즈 페이지 바로가기](https://github.com/jeiel85/zephyr-sky/releases))
 - **Brand Page:** 가동 중 ([소개 페이지 바로가기](https://jeiel85.github.io/zephyr-sky/))
+    - **주의**: GitHub 저장소의 **Settings > Pages > Build and deployment > Source**가 반드시 **"GitHub Actions"**로 설정되어 있어야 합니다.
 - **배포 파일:** `app-release.apk` (설치용), `app-release.aab` (스토어 업로드용)
 
 ## 4. 향후 유지보수 계획

@@ -44,10 +44,10 @@
 - GitHub 최신 소스 동기화 및 충돌 해결 완료.
 - 마지막 조회 위치 저장 기능 구현 및 검증 완료.
 - 상세 날씨 데이터 시각화 및 UI/UX 폴리싱 완료.
-- **GitHub Actions 릴리즈 자동화 강화 및 Pages(github.io) 자동 배포 시스템 구축.**
-    - `main` 브랜치 푸시 시 Flutter Web 빌드 및 GitHub Pages(`https://jeiel85.github.io/open-weather/`) 자동 배포.
-    - 태그 푸시 시 릴리즈 자동 생성 권한 최적화.
-- **프로젝트 핵심 기능 명세 및 모든 자동화 시스템 구축 완료.**
+- **GitHub Actions 자동 빌드 및 릴리즈 시스템 구축 완료 (v1.1.2).**
+- **GitHub Pages(github.io) 자동 배포 시스템 구축 완료.**
+    - *참고:* GitHub Pages 배포 성공을 위해 저장소 [Settings] > [Pages] > [Build and deployment] > [Source]를 `GitHub Actions`로 변경해야 함.
+- **프로젝트 핵심 기능 및 자동화 워크플로우 완벽 정상화.**
 
     - APK 및 AAB(App Bundle) 동시 자동 빌드 설정 구축.
 - **프로젝트 핵심 기능 명세 구현 완료.**

@@ -135,6 +135,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               _buildCurrentWeather(weather),
               const SizedBox(height: 40),
               _buildWeatherDetails(weather),
+              const SizedBox(height: 24),
+              _buildExtendedWeatherInfo(weather),
               const SizedBox(height: 40),
               _buildHourlyForecast(weather.hourlyForecast),
               const SizedBox(height: 40),
@@ -168,6 +170,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             color: Colors.white.withOpacity(0.7),
           ),
         ),
+        // 일출/일몰 시간 표시
+        if (weather.sunrise != null || weather.sunset != null) ...[
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (weather.sunrise != null) ...[
+                const Icon(Icons.wb_sunny_outlined, color: Colors.amber, size: 18),
+                const SizedBox(width: 4),
+                Text(
+                  DateFormat('HH:mm').format(weather.sunrise!),
+                  style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14),
+                ),
+              ],
+              const SizedBox(width: 16),
+              if (weather.sunset != null) ...[
+                const Icon(Icons.nights_stay_outlined, color: Colors.orange, size: 18),
+                const SizedBox(width: 4),
+                Text(
+                  DateFormat('HH:mm').format(weather.sunset!),
+                  style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14),
+                ),
+              ],
+            ],
+          ),
+        ],
       ],
     );
   }
@@ -175,7 +203,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildCurrentWeather(Weather weather) {
     return Column(
       children: [
-        Icon(weather.weatherIcon, size: 80, color: Colors.white),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(weather.weatherIcon, size: 80, color: Colors.white),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (weather.uvIndex != null) ...[
+                  Row(
+                    children: [
+                      const Icon(Icons.wb_sunny, color: Colors.amber, size: 18),
+                      const SizedBox(width: 4),
+                      Text(
+                        'UV ${weather.uvIndex!.toStringAsFixed(1)}',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: _getUvColor(weather.uvIndex!),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          weather.uvRiskLevel,
+                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
         const SizedBox(height: 10),
         Text(
           '${weather.temperature.round()}°',
@@ -194,6 +261,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         const SizedBox(height: 12),
+        // 강수 확률 표시
+        if (weather.precipitationProbability != null && weather.precipitationProbability! > 0) ...[
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.blue.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.water_drop, color: Colors.lightBlueAccent, size: 18),
+                const SizedBox(width: 4),
+                Text(
+                  '강수확률 ${weather.precipitationProbability!.round()}%',
+                  style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
         Text(
           '최고: ${weather.maxTemp.round()}°  최저: ${weather.minTemp.round()}°',
           style: TextStyle(
@@ -203,6 +292,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ],
     );
+  }
+
+  Color _getUvColor(double uv) {
+    if (uv <= 2) return Colors.green;
+    if (uv <= 5) return Colors.yellow.shade700;
+    if (uv <= 7) return Colors.orange;
+    if (uv <= 10) return Colors.red;
+    return Colors.purple;
   }
 
   Widget _buildWeatherDetails(Weather weather) {
@@ -223,14 +320,89 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildDetailItem(IconData icon, String label, String value) {
+  Widget _buildExtendedWeatherInfo(Weather weather) {
+    final List<Widget> items = [];
+    
+    // AQI
+    if (weather.airQualityIndex != null) {
+      items.add(_buildDetailItem(
+        Icons.eco_outlined, 
+        'AQI', 
+        '${weather.airQualityIndex} (${weather.airQualityLevel})',
+        color: _getAqiColor(weather.airQualityIndex!),
+      ));
+    }
+    
+    // 기압
+    if (weather.pressure != null) {
+      items.add(_buildDetailItem(
+        Icons.speed_outlined, 
+        '기압', 
+        '${weather.pressure!.round()}hPa',
+      ));
+    }
+    
+    // 시정
+    if (weather.visibility != null) {
+      items.add(_buildDetailItem(
+        Icons.visibility_outlined, 
+        '시정', 
+        '${(weather.visibility! / 1000).toStringAsFixed(1)}km',
+      ));
+    }
+    
+    // 이슬점
+    if (weather.dewPoint != null) {
+      items.add(_buildDetailItem(
+        Icons.water_outlined, 
+        '이슬점', 
+        '${weather.dewPoint!.round()}°',
+      ));
+    }
+    
+    // 구름량
+    if (weather.cloudCover != null) {
+      items.add(_buildDetailItem(
+        Icons.cloud_outlined, 
+        '구름', 
+        '${weather.cloudCover}%',
+      ));
+    }
+    
+    if (items.isEmpty) return const SizedBox.shrink();
+    
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Wrap(
+        spacing: 20,
+        runSpacing: 16,
+        alignment: WrapAlignment.spaceAround,
+        children: items,
+      ),
+    );
+  }
+
+  Color _getAqiColor(int aqi) {
+    if (aqi <= 50) return Colors.green;
+    if (aqi <= 100) return Colors.yellow.shade700;
+    if (aqi <= 150) return Colors.orange;
+    if (aqi <= 200) return Colors.red;
+    if (aqi <= 300) return Colors.purple;
+    return Colors.brown;
+  }
+
+  Widget _buildDetailItem(IconData icon, String label, String value, {Color? color}) {
     return Column(
       children: [
-        Icon(icon, color: Colors.white70, size: 24),
+        Icon(icon, color: color ?? Colors.white70, size: 24),
         const SizedBox(height: 8),
         Text(label, style: const TextStyle(color: Colors.white60, fontSize: 12)),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(value, style: TextStyle(color: color ?? Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -239,13 +411,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '시간별 예보',
-          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              '시간별 예보',
+              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              '${hourly.length}시간',
+              style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12),
+            ),
+          ],
         ),
         const SizedBox(height: 16),
         Container(
-          height: 130,
+          height: 140,
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.1),
             borderRadius: BorderRadius.circular(20),
@@ -256,25 +437,38 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             itemBuilder: (context, index) {
               final item = hourly[index];
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       DateFormat('HH시').format(item.time),
-                      style: const TextStyle(color: Colors.white70, fontSize: 14),
+                      style: const TextStyle(color: Colors.white70, fontSize: 13),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     Icon(
                       WeatherHelper.getIcon(item.weatherCode), 
                       color: Colors.white, 
-                      size: 28
+                      size: 26
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     Text(
                       '${item.temperature.round()}°',
-                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
                     ),
+                    if (item.precipitationProbability != null && item.precipitationProbability! > 0) ...[
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.water_drop, color: Colors.lightBlueAccent, size: 12),
+                          Text(
+                            '${item.precipitationProbability!.round()}%',
+                            style: const TextStyle(color: Colors.lightBlueAccent, fontSize: 11),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               );
@@ -289,9 +483,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '주간 예보',
-          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              '주간 예보',
+              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              '${daily.length}일',
+              style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12),
+            ),
+          ],
         ),
         const SizedBox(height: 16),
         Container(
@@ -303,29 +506,63 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: Column(
             children: daily.map((day) {
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Row(
                   children: [
                     Expanded(
                       flex: 2,
                       child: Text(
                         DateFormat('E', 'ko_KR').format(day.time),
-                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                        style: const TextStyle(color: Colors.white, fontSize: 15),
                       ),
                     ),
                     Expanded(
                       child: Icon(
                         WeatherHelper.getIcon(day.weatherCode), 
                         color: Colors.white, 
-                        size: 24
+                        size: 22
                       ),
                     ),
-                    Expanded(
-                      flex: 2,
+                    // 강수 확률
+                    if (day.precipitationProbability != null && day.precipitationProbability! > 0)
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.water_drop, color: Colors.lightBlueAccent, size: 14),
+                            Text(
+                              '${day.precipitationProbability!.round()}%',
+                              style: const TextStyle(color: Colors.lightBlueAccent, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      const Expanded(child: SizedBox.shrink()),
+                    // UV 지수
+                    if (day.uvIndex != null && day.uvIndex! > 0)
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.wb_sunny, color: Colors.amber, size: 14),
+                            const SizedBox(width: 2),
+                            Text(
+                              'UV ${day.uvIndex!.round()}',
+                              style: TextStyle(color: Colors.amber.shade200, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: 70,
                       child: Text(
                         '${day.minTemp.round()}° / ${day.maxTemp.round()}°',
                         textAlign: TextAlign.end,
-                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                        style: const TextStyle(color: Colors.white, fontSize: 14),
                       ),
                     ),
                   ],

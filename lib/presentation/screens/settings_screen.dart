@@ -21,6 +21,35 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          // 알림 설정 (중요도에 따라 상단 배치)
+          _buildSectionHeader('알림', settings.isDarkMode),
+          _buildSettingsCard(
+            settings.isDarkMode,
+            children: [
+              SwitchListTile(
+                title: const Text('상태바 날씨 알림'),
+                subtitle: const Text('상태바에 현재 날씨를 항상 표시합니다.'),
+                value: settings.notificationsEnabled,
+                onChanged: (value) async {
+                  await settingsNotifier.setNotificationsEnabled(value);
+                  if (!value) {
+                    // 알림 비활성화 시 즉시 제거
+                    ref.read(notificationServiceProvider).cancelNotification();
+                  } else {
+                    // 알림 활성화 시 날씨 데이터가 있으면 즉시 갱신
+                    final weather = ref.read(weatherStateProvider).value;
+                    if (weather != null) {
+                      ref.read(notificationServiceProvider).showWeatherNotification(weather);
+                    }
+                  }
+                },
+                secondary: const Icon(Icons.notifications_active, color: Colors.blue),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 24),
+
           // 외관 설정
           _buildSectionHeader('외관', settings.isDarkMode),
           _buildSettingsCard(
@@ -59,23 +88,6 @@ class SettingsScreen extends ConsumerWidget {
                 value: false,
                 groupValue: settings.useCelsius,
                 onChanged: (value) => settingsNotifier.setUseCelsius(false),
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 24),
-          
-          // 알림 설정
-          _buildSectionHeader('알림', settings.isDarkMode),
-          _buildSettingsCard(
-            settings.isDarkMode,
-            children: [
-              SwitchListTile(
-                title: const Text('날씨 알림'),
-                subtitle: const Text('상태바에 날씨 정보 표시'),
-                value: settings.notificationsEnabled,
-                onChanged: (value) => settingsNotifier.setNotificationsEnabled(value),
-                secondary: const Icon(Icons.notifications, color: Colors.blue),
               ),
             ],
           ),

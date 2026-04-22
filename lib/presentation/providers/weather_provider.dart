@@ -47,8 +47,15 @@ class WeatherNotifier extends StateNotifier<AsyncValue<Weather?>> {
     final cached = await _repository.getCachedWeather();
     if (cached != null) {
       state = AsyncValue.data(cached);
-      // 캐시된 데이터가 있으면 알림도 업데이트
-      await _ref.read(notificationServiceProvider).showWeatherNotification(cached);
+      
+      // 알림 설정 확인 후 업데이트
+      final settings = _ref.read(settingsProvider);
+      if (settings.notificationsEnabled) {
+        await _ref.read(notificationServiceProvider).showWeatherNotification(cached);
+      } else {
+        await _ref.read(notificationServiceProvider).cancelNotification();
+      }
+      
       // 위젯 업데이트
       await HomeWidgetService.updateWidget(cached);
     }
@@ -60,8 +67,14 @@ class WeatherNotifier extends StateNotifier<AsyncValue<Weather?>> {
       final weather = await _repository.getWeather(lat, lon, locationName);
       state = AsyncValue.data(weather);
       
-      // 날씨 데이터를 성공적으로 가져오면 상태바 알림 업데이트
-      await _ref.read(notificationServiceProvider).showWeatherNotification(weather);
+      // 날씨 데이터를 성공적으로 가져오면 알림 설정 확인 후 업데이트
+      final settings = _ref.read(settingsProvider);
+      if (settings.notificationsEnabled) {
+        await _ref.read(notificationServiceProvider).showWeatherNotification(weather);
+      } else {
+        await _ref.read(notificationServiceProvider).cancelNotification();
+      }
+      
       // 홈 위젯 업데이트
       await HomeWidgetService.updateWidget(weather);
     } catch (e, stack) {

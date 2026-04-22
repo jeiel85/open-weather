@@ -212,7 +212,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             leading: const Icon(Icons.search, color: Colors.white),
             title: const Text('위치 검색', style: TextStyle(color: Colors.white)),
             onTap: () {
-              Navigator.pop(context);
+              // Navigator.pop(context); // Drawer를 닫지 않고 이동
               Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchScreen()));
             },
           ),
@@ -220,7 +220,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             leading: const Icon(Icons.settings, color: Colors.white),
             title: const Text('설정', style: TextStyle(color: Colors.white)),
             onTap: () {
-              Navigator.pop(context);
+              // Navigator.pop(context); // Drawer를 닫지 않고 이동
               Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
             },
           ),

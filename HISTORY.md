@@ -1,6 +1,6 @@
 # 프로젝트 이력 관리 (HISTORY.md)
 
-## [2026-04-22] 상위 날씨 앱 분석 기반 Phase 1-2 구현 완료
+## [2026-04-22] 상위 날씨 앱 분석 기반 전체 구현 완료 (v1.1.0)
 
 ### Phase 1: 확장 날씨 데이터 표시
 - **Weather 엔티티 확장:** AQI, UV Index, 강수 확률, 일출/일몰, 기압, 시정, 이슬점, 구름량 필드 추가
@@ -15,16 +15,37 @@
 - **SettingsScreen 추가:** 외관, 단위, 알림, 즐겨찾기, 앱 정보 설정 화면
 - **HomeScreen 개선:** 설정 버튼 추가
 
+### Phase 3: 날씨 그래프 (fl_chart)
+- **fl_chart 패키지 추가:** 기온 추이 선 그래프, 강수 확률 막대 그래프
+- **WeatherChart, PrecipitationChart 위젯 구현**
+- **HomeScreen에 그래프 표시**
+
+### Phase 4: 안드로이드 홈 스크린 위젯
+- **home_widget 패키지 추가**
+- **AndroidManifest.xml:** widget receiver 등록
+- **위젯 레이아웃:** home_widget_layout.xml, widget_background.xml
+- **HomeWidgetReceiver (Kotlin):** 위젯 데이터 표시
+- **HomeWidgetService (Dart):** 날씨 업데이트 시 위젯 자동 갱신
+
+### Phase 5: 야외 활동 지수 및 테스트
+- **Weather 엔티티:** outdoorActivityScore, outdoorActivityLevel, outdoorActivityMessage 추가
+- **HomeScreen:** 야외 활동 지수 UI 표시 (점수, 진행 바, 권장 메시지)
+- **단위 테스트 추가:** Weather, AQI, UV, 야외 활동 등 10개 테스트 케이스
+
 ### 커밋 목록
 - `02a8a7f` feat: 확장 날씨 데이터 추가 (AQI, UV, 48시간/16일 예보, 상세 기상 정보)
 - `6c41067` docs: 상위 날씨 앱 분석 기반 개발 로드맵 작성
 - `e2d69b7` feat: Phase 2 - 날씨 경고 및 설정 기능 추가
+- `1df59ae` docs: Phase 1-2 구현 이력 추가
+- `6766fc7` feat: Phase 3-5 전체 기능 구현 완료
 
 ### 현재 상태
-- 앱이 더 이상 간단한 날씨 앱이 아닌 종합적인 날씨 정보 앱으로 확장됨
+- 상위 날씨 앱의 대부분의 기능을 구현한 종합 날씨 앱
 - AQI, UV Index, 강수 확률, 일출/일몰 등 다양한 날씨 정보 제공
 - 사용자 설정 (다크 모드, 단위, 알림, 즐겨찾기) 지원
-- 날씨 경고 시스템 구현
+- 날씨 경고 시스템 및 야외 활동 지수
+- 안드로이드 홈 스크린 위젯 지원
+- 단위 테스트 커버리지 확대
 
 ## [2026-04-20] 프로젝트 시작 및 초기 설정
 

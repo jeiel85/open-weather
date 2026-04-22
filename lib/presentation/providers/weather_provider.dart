@@ -8,6 +8,7 @@ import '../../core/utils/location_service.dart';
 import '../../core/utils/notification_service.dart';
 import '../../core/utils/home_widget_service.dart';
 import '../../domain/repositories/weather_repository.dart';
+import 'settings_provider.dart';
 
 // SharedPreferences 프로바이더 (main.dart에서 override 필수)
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {

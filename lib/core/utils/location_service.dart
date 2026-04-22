@@ -34,7 +34,7 @@ class LocationService {
   // 위도, 경도를 주소로 변환 (역지오코딩)
   Future<String?> getAddressFromLatLng(double lat, double lon) async {
     try {
-      final List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon, localeIdentifier: 'ko_KR');
+      final List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
       if (placemarks.isNotEmpty) {
         final Placemark place = placemarks.first;
         // 행정구역(subLocality) 또는 도시명(locality) 반환
